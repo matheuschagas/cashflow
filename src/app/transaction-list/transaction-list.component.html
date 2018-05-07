@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <table class="table table-condensed"  id="table"
+             data-toggle="table"
+             data-filter-control="true"
+             data-show-export="true"
+             data-click-to-select="true"
+             data-toolbar="#toolbar">
+        <thead>
+        <th>Transaction date</th>
+        <th data-field="description" data-filter-control="input" data-sortable="true">Description</th>
+        <th data-field="paymentType" data-filter-control="select" data-sortable="true">Payment type</th>
+        <th data-field="amount" data-filter-control="input" data-sortable="true">Amount</th>
+        <th *ngIf="manager"></th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td (click)="edit(transaction)">{{transaction.transactionDate | date}}</td>
+          <td (click)="edit(transaction)">{{transaction.description}}</td>
+          <td (click)="edit(transaction)">{{transaction.paymentType | paymentType}}</td>
+          <td (click)="edit(transaction)">{{transaction.amount | currency}}</td>
+          <td *ngIf="manager"><i class="far fa-trash-alt" (click)="delete(transaction)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Editing transaction | {{transaction.transactionDate | date}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <form>
+              <div class="form-group">
+                <label>Description</label>
+                <input name="description" class="form-control" [(ngModel)]="transaction.description" [ngModelOptions]="{standalone: true}" required/>
+              </div>
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" class="form-control" [(ngModel)]="transaction.amount" [ngModelOptions]="{standalone: true}" required/>
+              </div>
+              <div class="form-group">
+                <label>Payment type</label>
+                <select name="paymentType" class="form-control" [(ngModel)]="transaction.paymentType" [ngModelOptions]="{standalone: true}">
+                  <option [value]="-1">Select an option</option>
+                  <option *ngFor="let paymentType of paymentTypes" [value]="paymentType.id">{{paymentType.name}}</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="button" (click)="updateTransaction()">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
